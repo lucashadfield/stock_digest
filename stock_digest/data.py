@@ -1,5 +1,6 @@
 import datetime
 import itertools
+from functools import lru_cache
 from pathlib import Path
 
 import pandas as pd
@@ -35,8 +36,9 @@ class Portfolio:
         for symbol, details in self.config.items():
             history = pd.Series(details['history'], name=symbol).cumsum()
             holdings.append(
-                history.reindex(pd.date_range(self.prev_date, self.date, freq='D'))
+                history.reindex(pd.date_range(history.index.min(), self.date, freq='D'))
                 .fillna(method='ffill')
+                .reindex(pd.date_range(self.prev_date, self.date, freq='D'))
                 .fillna(0)
             )
 
@@ -86,9 +88,11 @@ class Portfolio:
         return prices.drop(conversions, 1)
 
     def _fill_nan(self, prices):
-        return prices.reindex(
+        prices = prices.reindex(
             pd.date_range(self.prev_date, self.date, freq='D')
         ).fillna(method='ffill')
+
+        return prices[~prices.isnull().all(1)]
 
     def fetch_prices(
         self, apply_conversion: bool = True, apply_offset: bool = True
@@ -118,9 +122,18 @@ class Portfolio:
     def get(self) -> pd.DataFrame:
         holdings = self.build_holdings()
         prices = self.fetch_prices()
+        _error = prices[['_error']]
+        prices = prices.drop('_error', 1)
+        abs_change = holdings.shift(1).mul(prices) - holdings.shift(1).mul(
+            prices.shift(1)
+        )
 
         return pd.concat(
-            [holdings, prices.drop('_error', 1), prices[['_error']]],
+            [holdings, prices, abs_change, _error],
             1,
-            keys=('holdings', 'prices', '_error'),
+            keys=('holdings', 'prices', 'abs_change', '_error'),
         )
+
+    @lru_cache(maxsize=1)
+    def __call__(self):
+        return self.get()
