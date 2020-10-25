@@ -19,7 +19,7 @@ class Portfolio:
         self.prev_date = self.date - relativedelta(days=35)
 
     @staticmethod
-    def _load_config(config_path) -> dict:
+    def _load_config(config_path: Path) -> dict:
         with config_path.open() as f:
             config = yaml.safe_load(f)
 
@@ -63,7 +63,7 @@ class Portfolio:
             progress=False,
         )['Adj Close']
 
-    def _apply_offset(self, prices):
+    def _apply_offset(self, prices: pd.DataFrame) -> pd.DataFrame:
         for symbol, info in self.config.items():
             if 'us_offset' in info:
                 tmp_col = prices[symbol]
@@ -78,7 +78,7 @@ class Portfolio:
 
         return prices
 
-    def _apply_conversion(self, prices):
+    def _apply_conversion(self, prices: pd.DataFrame) -> pd.DataFrame:
         conversions = set()
         for symbol, info in self.config.items():
             if 'conversion' in info:
@@ -87,7 +87,7 @@ class Portfolio:
 
         return prices.drop(conversions, 1)
 
-    def _fill_nan(self, prices):
+    def _fill_nan(self, prices: pd.DataFrame) -> pd.DataFrame:
         prices = prices.reindex(
             pd.date_range(self.prev_date, self.date, freq='D')
         ).fillna(method='ffill')
@@ -135,5 +135,5 @@ class Portfolio:
         )
 
     @lru_cache(maxsize=1)
-    def __call__(self):
+    def __call__(self) -> pd.DataFrame:
         return self.get()

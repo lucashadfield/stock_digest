@@ -33,7 +33,7 @@ class Email:
         </html>
         '''
 
-        self.msg.attach(MIMEText(html, "html"))
+        self.msg.attach(MIMEText(html, 'html'))
 
         with io.BytesIO() as buf:
             fig.savefig(buf, format='png')

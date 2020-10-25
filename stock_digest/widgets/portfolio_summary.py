@@ -38,7 +38,12 @@ class PortfolioSummaryWidget(Widget):
                 ha='center',
                 va='center',
                 color=self.BASE_COLOUR,
-                bbox=dict(boxstyle="round,pad=0.3", fc="white", lw=0, alpha=0.5),
+                bbox={
+                    'boxstyle': 'round,pad=0.3',
+                    'fc': 'white',
+                    'lw': 0,
+                    'alpha': 0.5,
+                },
                 size=12,
             )
 
