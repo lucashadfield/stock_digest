@@ -1,5 +1,7 @@
 import datetime
 
+from dateutil.relativedelta import relativedelta
+
 from .data import Portfolio
 from .email import Email
 from .report import Report
@@ -38,8 +40,23 @@ def main(
         PortfolioSummaryWidget(portfolio()), (slice(4, None), slice(0, None)), {}
     )
 
+    errors = ''
+    for d, error in (
+        portfolio()
+        .loc[
+            [
+                portfolio.date,
+                portfolio.date - relativedelta(days=7),
+                portfolio.date - relativedelta(days=1),
+            ]
+        ]
+        ._error._error.iteritems()
+    ):
+        if error is not None:
+            errors += f'{d}: {error}\n'
+
     email = Email(email_config_path)
-    email.attach_fig(report.fig, str(date))
+    email.attach_fig(report.fig, str(date), errors)
     email.send(
         f'Stocks - {date.strftime("%a, %e %b")}',
         email.config['sender'],

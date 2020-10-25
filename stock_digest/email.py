@@ -25,9 +25,10 @@ class Email:
         with config_path.open() as f:
             return yaml.safe_load(f)
 
-    def attach_fig(self, fig: plt.Figure, name: str):
+    def attach_fig(self, fig: plt.Figure, name: str, text: str = ''):
         html = f'''
         <html>
+            {text}
            <img src="cid:image_id_1">
         </html>
         '''
