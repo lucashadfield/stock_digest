@@ -5,7 +5,7 @@ from stock_digest import Widget
 
 class DayBreakdownWidget(Widget):
     def plot(self, ax: plt.axes) -> plt.axes:
-        plot_df = self.portfolio_df.abs_change.iloc[-1].sort_values(ascending=False)
+        plot_df = self.portfolio.df.abs_change.iloc[-1].sort_values(ascending=False)
 
         plot_df.plot(ax=ax, kind='bar', width=0.95, lw=0, ec=self.BASE_COLOUR)
 

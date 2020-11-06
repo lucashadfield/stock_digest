@@ -1,14 +1,16 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from stock_digest import Portfolio
+
 
 class Widget:
     POS_COLOUR = '#b3e2cd'
     NEG_COLOUR = '#fbb4ae'
     BASE_COLOUR = '#606060'
 
-    def __init__(self, portfolio_df: pd.DataFrame):
-        self.portfolio_df = portfolio_df
+    def __init__(self, portfolio: Portfolio):
+        self.portfolio = portfolio
 
     @staticmethod
     def _symbol_fix(symbol):

@@ -12,7 +12,7 @@ class ChangeWidget(Widget):
         return '▲' if val >= 0 else '▼'
 
     def plot(self, ax: plt.axes, end, start, label) -> plt.axes:
-        plot_df = self.portfolio_df.reindex(pd.date_range(start=start, end=end))
+        plot_df = self.portfolio.df.reindex(pd.date_range(start=start, end=end))
 
         change = plot_df.abs_change[1:].sum().sum()
 
@@ -78,7 +78,7 @@ class ChangeWidget(Widget):
 
 class DayChangeWidget(ChangeWidget):
     def plot(self, ax: plt.axes) -> plt.axes:
-        end = self.portfolio_df.index[-1]
+        end = self.portfolio.df.index[-1]
         start = end - relativedelta(days=1)
 
         super().plot(ax, end, start, 'Day')
@@ -86,7 +86,7 @@ class DayChangeWidget(ChangeWidget):
 
 class WeekChangeWidget(ChangeWidget):
     def plot(self, ax: plt.axes) -> plt.axes:
-        end = self.portfolio_df.index[-1]
+        end = self.portfolio.df.index[-1]
         start = end - relativedelta(days=7)
 
         super().plot(ax, end, start, 'Week')
@@ -94,7 +94,7 @@ class WeekChangeWidget(ChangeWidget):
 
 class MonthChangeWidget(ChangeWidget):
     def plot(self, ax: plt.axes) -> plt.axes:
-        end = self.portfolio_df.index[-1]
+        end = self.portfolio.df.index[-1]
         start = end - relativedelta(months=1)
 
         super().plot(ax, end, start, 'Month')

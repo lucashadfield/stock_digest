@@ -10,13 +10,14 @@ from dateutil.relativedelta import relativedelta
 
 
 class Portfolio:
-    def __init__(self, config_path: str, date: datetime.date = None):
+    def __init__(self, config_path: str, date: datetime.date = None, days: int = 35):
         config = self._load_config(Path(config_path).expanduser())
         self._validate_config(config)
         self.config = config
+        self.days = days
 
         self.date = datetime.date.today() if date is None else date
-        self.prev_date = self.date - relativedelta(days=35)
+        self.prev_date = self.date - relativedelta(days=self.days)
 
     @staticmethod
     def _load_config(config_path: Path) -> dict:
@@ -124,16 +125,21 @@ class Portfolio:
         prices = self.fetch_prices()
         _error = prices[['_error']]
         prices = prices.drop('_error', 1)
+        value = holdings * prices
         abs_change = holdings.shift(1).mul(prices) - holdings.shift(1).mul(
             prices.shift(1)
         )
 
         return pd.concat(
-            [holdings, prices, abs_change, _error],
+            [holdings, prices, value, abs_change, _error],
             1,
-            keys=('holdings', 'prices', 'abs_change', '_error'),
+            keys=('holdings', 'prices', 'value', 'abs_change', '_error'),
         )
 
     @lru_cache(maxsize=1)
     def __call__(self) -> pd.DataFrame:
         return self.get()
+
+    @property
+    def df(self):
+        return self()
