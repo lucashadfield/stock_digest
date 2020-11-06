@@ -8,7 +8,7 @@ from stock_digest import Widget
 
 class PortfolioSummaryWidget(Widget):
     def plot(self, ax: plt.axes) -> plt.axes:
-        plt_df = self.portfolio.df.value.iloc[[-1]]
+        plt_df = self.portfolio.df.iloc[[-1]]
         plt_df['ratio'] = plt_df.value / plt_df.value.sum()
         plt_df['ratio_centre'] = plt_df.ratio.cumsum() - plt_df.ratio.div(2)
         plt_df['annot_x'] = 0.75 * (plt_df.ratio_centre * 2 * math.pi).apply(math.cos)
