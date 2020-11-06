@@ -1,6 +1,7 @@
 import datetime
 import sys
 import time
+import logging
 
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
@@ -26,7 +27,6 @@ def main(
 
     if date is None:
         try:
-            print(sys.argv[1])
             date = parse(sys.argv[1])
         except IndexError:
             date = datetime.date.today()
@@ -35,17 +35,18 @@ def main(
 
     for _ in range(72):
         # re-run every 10 mins for 12 hours if it fails
-        if (
-            portfolio.df.loc[
-                [
-                    portfolio.date,
-                    portfolio.date - relativedelta(days=7),
-                    portfolio.date - relativedelta(days=1),
-                ]
-            ]
-            ._error._error.isnull()
-            .any()
-        ):
+        check_dates = [
+            portfolio.date,
+            portfolio.date - relativedelta(days=7),
+            portfolio.date - relativedelta(days=1),
+        ]
+
+        errors = portfolio.df.loc[check_dates]._error._error
+
+        if errors.isnull.any():
+            logging.warning(
+                f'Nulls in data, sleeping for 600 seconds. {errors[errors.isnull()].to_dict()}'
+            )
             portfolio.__call__.cache_clear()
             time.sleep(600)
         else:
