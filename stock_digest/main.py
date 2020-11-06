@@ -43,9 +43,9 @@ def main(
 
         errors = portfolio.df.loc[check_dates]._error._error
 
-        if errors.isnull().any():
+        if errors.notnull().any():
             logging.warning(
-                f'Nulls in data, sleeping for 600 seconds. {errors[errors.isnull()].to_dict()}'
+                f'Missing data, sleeping for 600 seconds. {errors[errors.notnull()].to_dict()}'
             )
             portfolio.__call__.cache_clear()
             time.sleep(600)
