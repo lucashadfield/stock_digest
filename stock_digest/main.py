@@ -43,7 +43,7 @@ def main(
 
         errors = portfolio.df.loc[check_dates]._error._error
 
-        if errors.isnull.any():
+        if errors.isnull().any():
             logging.warning(
                 f'Nulls in data, sleeping for 600 seconds. {errors[errors.isnull()].to_dict()}'
             )
