@@ -1,6 +1,8 @@
 import datetime
+import sys
 import time
 
+from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
 from .data import Portfolio
@@ -23,7 +25,10 @@ def main(
         email_config_path = '~/.config/stock_digest/email.yaml'
 
     if date is None:
-        date = datetime.date.today()
+        try:
+            date = parse(sys.argv[1])
+        except IndexError:
+            date = datetime.date.today()
 
     portfolio = Portfolio(stock_config_path, date, 370)
 
