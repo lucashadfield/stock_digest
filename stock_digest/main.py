@@ -26,6 +26,7 @@ def main(
 
     if date is None:
         try:
+            print(sys.argv[1])
             date = parse(sys.argv[1])
         except IndexError:
             date = datetime.date.today()
