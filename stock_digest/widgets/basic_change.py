@@ -1,3 +1,5 @@
+import datetime
+
 import matplotlib.pyplot as plt
 import pandas as pd
 from dateutil.relativedelta import relativedelta
@@ -7,14 +9,23 @@ from stock_digest import Widget
 
 
 class ChangeWidget(Widget):
+    def __init__(self, portfolio, start: datetime.date, end: datetime.date, label: str):
+        self.start = start
+        self.end = end
+        self.label = label
+
+        super().__init__(portfolio)
+
     @staticmethod
     def _arrow(val: float) -> str:
         return '▲' if val >= 0 else '▼'
 
-    def plot(self, ax: plt.axes, end, start, label) -> plt.axes:
-        plot_df = self.portfolio.df.reindex(pd.date_range(start=start, end=end))
+    def plot(self, ax) -> plt.axes:
+        plot_df = self.portfolio.df.reindex(
+            pd.date_range(start=self.start, end=self.end)
+        )
 
-        change = plot_df.abs_change[1:].sum().sum()
+        change = plot_df.daily_change[1:].sum().sum()
 
         rate_tmp = plot_df.holdings.iloc[0].mul(plot_df.prices).sum(1)
         rate = (rate_tmp.iloc[-1] / rate_tmp.iloc[0]) - 1
@@ -28,12 +39,12 @@ class ChangeWidget(Widget):
         )
 
         ax.annotate(
-            label,
+            self.label,
             (0.2, 2.6),
             ha='left',
             va='center',
             size=16,
-            color=self.BASE_COLOUR,
+            color=self.BASE,
             weight='bold',
         )
         ax.annotate(
@@ -52,7 +63,7 @@ class ChangeWidget(Widget):
             ha='center',
             va='center',
             size=30,
-            color=self.BASE_COLOUR,
+            color=self.BASE,
             weight='bold',
         )
         ax.annotate(
@@ -61,7 +72,7 @@ class ChangeWidget(Widget):
             ha='center',
             va='center',
             size=22,
-            color=self.BASE_COLOUR,
+            color=self.BASE,
         )
 
         ax.set_xlim(0, 4)
@@ -77,24 +88,56 @@ class ChangeWidget(Widget):
 
 
 class DayChangeWidget(ChangeWidget):
-    def plot(self, ax: plt.axes) -> plt.axes:
-        end = self.portfolio.df.index[-1]
+    def __init__(self, portfolio):
+        end = portfolio.date
         start = end - relativedelta(days=1)
 
-        super().plot(ax, end, start, 'Day')
+        super().__init__(portfolio, start, end, 'Today')
 
 
 class WeekChangeWidget(ChangeWidget):
-    def plot(self, ax: plt.axes) -> plt.axes:
-        end = self.portfolio.df.index[-1]
+    def __init__(self, portfolio):
+        end = portfolio.date
         start = end - relativedelta(days=7)
 
-        super().plot(ax, end, start, 'Week')
+        super().__init__(portfolio, start, end, '1 Week')
+
+
+class ThisWeekChangeWidget(ChangeWidget):
+    def __init__(self, portfolio):
+        end = portfolio.date
+        start = end - relativedelta(days=end.isoweekday() - 1)
+
+        super().__init__(portfolio, start, end, 'This Week')
 
 
 class MonthChangeWidget(ChangeWidget):
-    def plot(self, ax: plt.axes) -> plt.axes:
-        end = self.portfolio.df.index[-1]
+    def __init__(self, portfolio):
+        end = portfolio.date
         start = end - relativedelta(months=1)
 
-        super().plot(ax, end, start, 'Month')
+        super().__init__(portfolio, start, end, '1 Month')
+
+
+class ThisMonthChangeWidget(ChangeWidget):
+    def __init__(self, portfolio):
+        end = portfolio.date
+        start = end - relativedelta(days=end.day - 1)
+
+        super().__init__(portfolio, start, end, 'This Month')
+
+
+class YearChangeWidget(ChangeWidget):
+    def __init__(self, portfolio):
+        end = portfolio.date
+        start = end - relativedelta(years=1)
+
+        super().__init__(portfolio, start, end, '1 Year')
+
+
+class ThisFinancialYearChangeWidget(ChangeWidget):
+    def __init__(self, portfolio):
+        end = portfolio.date
+        start = datetime.date(end.year if end.month >= 7 else end.year - 1, 7, 1)
+
+        super().__init__(portfolio, start, end, 'This Year')

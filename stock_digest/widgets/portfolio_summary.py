@@ -33,7 +33,7 @@ class PortfolioSummaryWidget(Widget):
                 (details.annot_x, details.annot_y),
                 ha='center',
                 va='center',
-                color=self.BASE_COLOUR,
+                color=self.BASE,
                 bbox={
                     'boxstyle': 'round,pad=0.3',
                     'fc': 'white',
@@ -50,7 +50,7 @@ class PortfolioSummaryWidget(Widget):
             va='center',
             size=30,
             weight='bold',
-            color=self.BASE_COLOUR,
+            color=self.BASE,
         )
         ax.set_xlim(-0.8, 0.8)
         ax.set_ylim(-0.8, 0.8)

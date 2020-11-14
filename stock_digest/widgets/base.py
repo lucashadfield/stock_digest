@@ -3,11 +3,13 @@ import pandas as pd
 
 
 class Widget:
-    POS_COLOUR = '#b3e2cd'
-    NEG_COLOUR = '#fbb4ae'
-    BASE_COLOUR = '#606060'
+    POS = '#b3e2cd'
+    NEG = '#fbb4ae'
+    BASE = '#606060'
+    LAST_FY = '#fed9a6'
+    THIS_FY = '#b3cde3'
 
-    def __init__(self, portfolio):
+    def __init__(self, portfolio, *args, **kwargs):
         self.portfolio = portfolio
 
     @staticmethod
@@ -19,7 +21,7 @@ class Widget:
         return f'{"-" if val < 0 else ""}${abs(val):,.0f}'
 
     def _colour(self, val):
-        return self.POS_COLOUR if val >= 0 else self.NEG_COLOUR
+        return self.POS if val >= 0 else self.NEG
 
-    def plot(self, ax: plt.axes, *args, **kwargs) -> plt.axes:
+    def plot(self, ax: plt.axes) -> plt.axes:
         raise NotImplementedError

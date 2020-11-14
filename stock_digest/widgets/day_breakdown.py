@@ -5,9 +5,9 @@ from stock_digest import Widget
 
 class DayBreakdownWidget(Widget):
     def plot(self, ax: plt.axes) -> plt.axes:
-        plot_df = self.portfolio.df.abs_change.iloc[-1].sort_values(ascending=False)
+        plot_df = self.portfolio.df.daily_change.iloc[-1].sort_values(ascending=False)
 
-        plot_df.plot(ax=ax, kind='bar', width=0.95, lw=0, ec=self.BASE_COLOUR)
+        plot_df.plot(ax=ax, kind='bar', width=0.95, lw=0, ec=self.BASE)
 
         for p, symbol in zip(ax.patches, plot_df.keys()):
             pos = p.get_height() >= 0
@@ -18,7 +18,7 @@ class DayBreakdownWidget(Widget):
                 (p.get_x() + p.get_width() / 2, 0),
                 ha='center',
                 va='top' if pos else 'bottom',
-                color=self.BASE_COLOUR,
+                color=self.BASE,
                 size=12,
                 weight='bold',
                 xytext=(0, -2 if pos else 2),
@@ -29,7 +29,7 @@ class DayBreakdownWidget(Widget):
                 (p.get_x() + p.get_width() / 2, p.get_height()),
                 ha='center',
                 va='bottom' if pos else 'top',
-                color=self.BASE_COLOUR,
+                color=self.BASE,
                 weight='bold',
                 size=12,
                 xytext=(0, 2 if pos else -2),
@@ -42,7 +42,7 @@ class DayBreakdownWidget(Widget):
         ax.set_xticks([])
         ax.set_yticks([])
 
-        ax.axhline(0, color=self.BASE_COLOUR, lw=0.5)
+        ax.axhline(0, color=self.BASE, lw=0.5)
         ax.set_xlim(-0.475, len(plot_df) - 0.525)
         ylim = ax.get_ylim()
         yrange = ylim[1] - ylim[0]
