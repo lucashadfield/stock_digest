@@ -1,0 +1,7 @@
+# copy to ~/.config/stock_digest/email.yaml
+host: smtp.gmail.com
+port: 465
+username: example@gmail.com
+password: password
+sender: 'Stock Digest <example@gmail.com>'
+recipient: 'example.recipient@gmail.com'

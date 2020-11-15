@@ -1,0 +1,31 @@
+# copy to ~/.config/stock_digest/stocks.yaml
+WOW.AX:
+  holdings: 100
+  history:
+    2019-09-10: 200
+    2020-03-04: -100
+CBA.AX:
+  holdings: 50
+  history:
+    2019-09-10: 10
+    2020-03-04: 10
+    2020-04-14: 30
+MSFT:
+  holdings: 20
+  history:
+    2020-01-02: 20
+  conversion: USDAUD=X
+  us_offset: True
+GOOG:
+  holdings: 1
+  history:
+    2018-07-24: 1
+  conversion: USDAUD=X
+  us_offset: True
+AMZN:
+  holdings: 0
+  history:
+    2018-07-24: 1
+    2020-10-01: -1
+  conversion: USDAUD=X
+  us_offset: True
