@@ -106,7 +106,7 @@ class WeekChangeWidget(ChangeWidget):
 class ThisWeekChangeWidget(ChangeWidget):
     def __init__(self, portfolio):
         end = portfolio.date
-        start = end - relativedelta(days=end.isoweekday() - 1)
+        start = end - relativedelta(days=end.isoweekday())
 
         super().__init__(portfolio, start, end, 'This Week')
 
@@ -122,7 +122,7 @@ class MonthChangeWidget(ChangeWidget):
 class ThisMonthChangeWidget(ChangeWidget):
     def __init__(self, portfolio):
         end = portfolio.date
-        start = end - relativedelta(days=end.day - 1)
+        start = end - relativedelta(days=end.day)
 
         super().__init__(portfolio, start, end, 'This Month')
 
@@ -138,6 +138,6 @@ class YearChangeWidget(ChangeWidget):
 class ThisFinancialYearChangeWidget(ChangeWidget):
     def __init__(self, portfolio):
         end = portfolio.date
-        start = datetime.date(end.year if end.month >= 7 else end.year - 1, 7, 1)
+        start = datetime.date(end.year if end.month >= 7 else end.year - 1, 6, 30)
 
         super().__init__(portfolio, start, end, 'This Year')
