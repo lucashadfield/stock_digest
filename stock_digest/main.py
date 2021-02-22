@@ -42,29 +42,6 @@ def main(
 
     portfolio = Portfolio(stock_config_path, date, 730)
 
-    for _ in range(72):
-        # re-run every 10 mins for 12 hours if it fails
-        check_dates = [
-            portfolio.date,
-            portfolio.date - relativedelta(days=1),
-            portfolio.date - relativedelta(days=7),
-            portfolio.date - relativedelta(days=portfolio.date.isoweekday() - 1),
-            portfolio.date - relativedelta(months=1),
-            portfolio.date - relativedelta(days=portfolio.date.day - 1),
-            datetime.date(date.year if date.month >= 7 else date.year - 1, 7, 1),
-        ]
-
-        errors = portfolio.df.loc[check_dates]._error._error
-
-        if errors.notnull().any():
-            logging.warning(
-                f'Missing data, sleeping for 600 seconds. {errors[errors.notnull()].to_dict()}'
-            )
-            portfolio.__call__.cache_clear()
-            time.sleep(600)
-        else:
-            break
-
     report = Report()
 
     # row 0
