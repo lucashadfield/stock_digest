@@ -43,7 +43,7 @@ class Portfolio:
                 .fillna(0)
             )
 
-        return pd.concat(holdings, 1).fillna(0)
+        return pd.concat(holdings, axis=1).fillna(0)
 
     def _compile_tickers(self, conversion: bool = True) -> dict:
         stock = set()
@@ -68,7 +68,7 @@ class Portfolio:
         for symbol, info in self.config.items():
             if 'us_offset' in info:
                 tmp_col = prices[symbol]
-                prices = prices.drop(symbol, 1)
+                prices = prices.drop(symbol, axis=1)
                 tmp_col.index = [
                     x + relativedelta(days=3)
                     if x.isoweekday() == 5
@@ -86,7 +86,7 @@ class Portfolio:
                 prices[symbol] *= prices[info['conversion']]
                 conversions.add(info['conversion'])
 
-        return prices.drop(conversions, 1)
+        return prices.drop(conversions, axis=1)
 
     def _fill_nan(self, prices: pd.DataFrame) -> pd.DataFrame:
         prices = prices.reindex(
@@ -124,7 +124,7 @@ class Portfolio:
         holdings = self.build_holdings()
         prices = self.fetch_prices()
         _error = prices[['_error']]
-        prices = prices.drop('_error', 1)
+        prices = prices.drop('_error', axis=1)
         value = holdings * prices
         daily_change = holdings.shift(1).mul(prices) - holdings.shift(1).mul(
             prices.shift(1)
@@ -132,7 +132,7 @@ class Portfolio:
 
         return pd.concat(
             [holdings, prices, value, daily_change, _error],
-            1,
+            axis=1,
             keys=('holdings', 'prices', 'value', 'daily_change', '_error'),
         )[-self.days :]
 

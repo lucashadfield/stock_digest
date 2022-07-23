@@ -24,7 +24,7 @@ class PortfolioTrendWidget(Widget):
             fy_next = fy + relativedelta(years=1)
 
             fy_cumulative = self.portfolio.df.daily_change[
-                fy : min(fy_next, self.portfolio.date)
+                fy : min(fy_next.date(), self.portfolio.date)
             ].cumsum()
             fy_cumulative = (
                 self.portfolio.df.value.loc[fy] + fy_cumulative - fy_cumulative.iloc[0]
@@ -59,7 +59,7 @@ class PortfolioTrendWidget(Widget):
 
             ax.axvline(fy, color=self.BASE, zorder=-4)
             ax.plot(
-                [fy, min(fy_next, self.portfolio.date)],
+                [fy, min(fy_next.date(), self.portfolio.date)],
                 [fy_baseline.iloc[0]] * 2,
                 color=self.BASE,
                 zorder=-4,
