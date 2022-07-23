@@ -1,10 +1,7 @@
 import datetime
-import logging
 import sys
-import time
 
 from dateutil.parser import parse
-from dateutil.relativedelta import relativedelta
 
 from . import PortfolioTrendWidget
 from .data import Portfolio
@@ -36,7 +33,7 @@ def main(
 
     if date is None:
         try:
-            date = parse(sys.argv[1])
+            date = parse(sys.argv[1]).date()
         except IndexError:
             date = datetime.date.today()
 
