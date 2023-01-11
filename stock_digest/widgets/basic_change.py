@@ -21,9 +21,7 @@ class ChangeWidget(Widget):
         return '▲' if val >= 0 else '▼'
 
     def plot(self, ax) -> plt.axes:
-        plot_df = self.portfolio.df.reindex(
-            pd.date_range(start=self.start, end=self.end)
-        )
+        plot_df = self.portfolio.df.reindex(pd.date_range(start=self.start, end=self.end))
 
         change = plot_df.daily_change[1:].sum().sum()
 
@@ -32,11 +30,7 @@ class ChangeWidget(Widget):
 
         colour = self._colour(change)
 
-        ax.add_patch(
-            patches.FancyBboxPatch(
-                (0.2, 0.2), 3.6, 2.6, mutation_scale=0.5, lw=4, ec=colour, fc='white'
-            )
-        )
+        ax.add_patch(patches.FancyBboxPatch((0.2, 0.2), 3.6, 2.6, mutation_scale=0.5, lw=4, ec=colour, fc='white'))
 
         ax.annotate(
             self.label,

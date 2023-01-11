@@ -1,0 +1,8 @@
+email_secret.yaml
+stocks_secret.yaml
+*.ipynb
+.idea/
+build/
+stock_digest.egg-info/
+stock_digest/__pycache__/
+stock_digest/widgets/__pycache__/

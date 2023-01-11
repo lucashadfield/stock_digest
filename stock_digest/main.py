@@ -59,9 +59,7 @@ def main(
     report.add_widget(PortfolioTrendWidget(portfolio), (slice(3, 5), slice(0, None)))
 
     # row 5,6,7,8
-    report.add_widget(
-        PortfolioSummaryWidget(portfolio), (slice(5, None), slice(0, None))
-    )
+    report.add_widget(PortfolioSummaryWidget(portfolio), (slice(5, None), slice(0, None)))
 
     email = Email(email_config_path)
     email.attach_fig(report.fig, str(date))

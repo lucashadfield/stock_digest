@@ -17,18 +17,12 @@ class PortfolioTrendWidget(Widget):
             zorder=-3,
         )
 
-        fy_dates = [
-            x for x in list(self.portfolio.df.index) if (x.month == 7 and x.day == 1)
-        ]
+        fy_dates = [x for x in list(self.portfolio.df.index) if (x.month == 7 and x.day == 1)]
         for fy, c in zip(fy_dates, [self.LAST_FY, self.THIS_FY]):
             fy_next = fy + relativedelta(years=1)
 
-            fy_cumulative = self.portfolio.df.daily_change[
-                fy : min(fy_next.date(), self.portfolio.date)
-            ].cumsum()
-            fy_cumulative = (
-                self.portfolio.df.value.loc[fy] + fy_cumulative - fy_cumulative.iloc[0]
-            ).sum(1)
+            fy_cumulative = self.portfolio.df.daily_change[fy : min(fy_next.date(), self.portfolio.date)].cumsum()
+            fy_cumulative = (self.portfolio.df.value.loc[fy] + fy_cumulative - fy_cumulative.iloc[0]).sum(1)
 
             fy_cumulative.plot(
                 ax=ax,
@@ -42,11 +36,7 @@ class PortfolioTrendWidget(Widget):
         legend = True
         for fy in fy_dates:
             fy_next = fy + relativedelta(years=1)
-            fy_baseline = (
-                self.portfolio.df.prices.loc[fy:fy_next]
-                .mul(self.portfolio.df.holdings.loc[fy])
-                .sum(1)
-            )
+            fy_baseline = self.portfolio.df.prices.loc[fy:fy_next].mul(self.portfolio.df.holdings.loc[fy]).sum(1)
             fy_baseline.plot(
                 ax=ax,
                 c=self.BASE,
@@ -106,9 +96,7 @@ class PortfolioTrendWidget(Widget):
                 }
             )
 
-        formatter = FuncFormatter(
-            lambda val, pos: f'{int(val / 1000)}k' if val > 0 else None
-        )
+        formatter = FuncFormatter(lambda val, pos: f'{int(val / 1000)}k' if val > 0 else None)
         ax.yaxis.set_major_formatter(formatter)
 
         ax.legend(

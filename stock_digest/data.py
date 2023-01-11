@@ -70,9 +70,7 @@ class Portfolio:
                 tmp_col = prices[symbol]
                 prices = prices.drop(symbol, axis=1)
                 tmp_col.index = [
-                    x + relativedelta(days=3)
-                    if x.isoweekday() == 5
-                    else x + relativedelta(days=1)
+                    x + relativedelta(days=3) if x.isoweekday() == 5 else x + relativedelta(days=1)
                     for x in tmp_col.index
                 ]
                 prices = prices.join(tmp_col)
@@ -89,15 +87,11 @@ class Portfolio:
         return prices.drop(conversions, axis=1)
 
     def _fill_nan(self, prices: pd.DataFrame) -> pd.DataFrame:
-        prices = prices.reindex(
-            pd.date_range(self.prev_date, self.date, freq='D')
-        ).fillna(method='ffill')
+        prices = prices.reindex(pd.date_range(self.prev_date, self.date, freq='D')).fillna(method='ffill')
 
         return prices[~prices.isnull().all(1)]
 
-    def fetch_prices(
-        self, apply_conversion: bool = True, apply_offset: bool = True
-    ) -> pd.DataFrame:
+    def fetch_prices(self, apply_conversion: bool = True, apply_offset: bool = True) -> pd.DataFrame:
         tickers = self._compile_tickers(apply_conversion)
         prices = self._bulk_fetch_prices(tickers['stock'] + tickers['currency'])
 
@@ -105,9 +99,7 @@ class Portfolio:
             prices = self._apply_offset(prices)
 
         # append the missing info
-        prices['_error'] = prices.apply(
-            lambda x: list(itertools.compress(prices.columns, x.isnull())), 1
-        )
+        prices['_error'] = prices.apply(lambda x: list(itertools.compress(prices.columns, x.isnull())), 1)
 
         # fill the missing rows
         prices = self._fill_nan(prices)
@@ -126,9 +118,7 @@ class Portfolio:
         _error = prices[['_error']]
         prices = prices.drop('_error', axis=1)
         value = holdings * prices
-        daily_change = holdings.shift(1).mul(prices) - holdings.shift(1).mul(
-            prices.shift(1)
-        )
+        daily_change = holdings.shift(1).mul(prices) - holdings.shift(1).mul(prices.shift(1))
 
         return pd.concat(
             [holdings, prices, value, daily_change, _error],

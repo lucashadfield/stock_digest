@@ -24,12 +24,7 @@ class PortfolioSummaryWidget(Widget):
             ratio_str = f'{details.ratio:.1%}'
 
             ax.annotate(
-                r'$\bf{'
-                + self._symbol_fix(ticker)
-                + '}$\n'
-                + value_str
-                + '\n'
-                + ratio_str,
+                r'$\bf{' + self._symbol_fix(ticker) + '}$\n' + value_str + '\n' + ratio_str,
                 (details.annot_x, details.annot_y),
                 ha='center',
                 va='center',
