@@ -26,7 +26,7 @@ class ChangeWidget(Widget):
         change = plot_df.daily_change[1:].sum().sum()
 
         rate_tmp = plot_df.holdings.iloc[0].mul(plot_df.prices).sum(1)
-        rate = (rate_tmp.iloc[-1] / rate_tmp.iloc[0]) - 1
+        rate = 0. if rate_tmp.iloc[0] == 0 else (rate_tmp.iloc[-1] / rate_tmp.iloc[0]) - 1
 
         colour = self._colour(change)
 

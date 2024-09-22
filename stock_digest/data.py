@@ -94,6 +94,7 @@ class Portfolio:
     def fetch_prices(self, apply_conversion: bool = True, apply_offset: bool = True) -> pd.DataFrame:
         tickers = self._compile_tickers(apply_conversion)
         prices = self._bulk_fetch_prices(tickers['stock'] + tickers['currency'])
+        prices.index = prices.index.tz_localize(None)
 
         if apply_offset:
             prices = self._apply_offset(prices)

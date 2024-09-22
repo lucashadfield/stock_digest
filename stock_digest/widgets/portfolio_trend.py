@@ -57,7 +57,8 @@ class PortfolioTrendWidget(Widget):
 
         ax.grid(axis='both')
         ax.set_xlim(self.portfolio.date - relativedelta(years=1), None)
-        ax.set_ylim(0, None)
+        ymax = max([max(line.get_ydata()) for line in ax.get_lines()])
+        ax.set_ylim(0, ymax * 1.2)
         ax.minorticks_off()
 
         ax.tick_params(
