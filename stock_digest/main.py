@@ -68,3 +68,6 @@ def main(
         email.config['sender'],
         email.config['recipient'],
     )
+
+if __name__ == '__main__':
+    main()
