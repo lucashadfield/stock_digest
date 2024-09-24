@@ -24,5 +24,4 @@ Creates a configurable summary of stock movements to your inbox:
     - `stock_digest 2020-10-01` - run a specific day
 
 ## Docker
-- `chmod +x build.sh`
 - `./build.sh`
