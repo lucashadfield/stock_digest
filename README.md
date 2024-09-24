@@ -24,6 +24,4 @@ Creates a configurable summary of stock movements to your inbox:
     - `stock_digest 2020-10-01` - run a specific day
 
 ## Docker
-- `rm stock_digest.tar`
-- `docker build -t stock_digest .`
-- `docker save stock_digest -o stock_digest.tar`
+- `./build.sh`
