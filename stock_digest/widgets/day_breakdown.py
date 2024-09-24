@@ -5,8 +5,9 @@ from stock_digest import Widget
 
 class DayBreakdownWidget(Widget):
     def plot(self, ax: plt.axes) -> plt.axes:
+        non_zero_tickers = self.portfolio.df.holdings.iloc[-1][self.portfolio.df.holdings.iloc[-1].gt(0)].keys()
         plot_df = (
-            self.portfolio.df.daily_change.iloc[-1]
+            self.portfolio.df.daily_change.iloc[-1][non_zero_tickers]
             .sort_values(ascending=False)
             .rename('daily_change')
             .to_frame()
